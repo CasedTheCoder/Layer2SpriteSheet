@@ -2,10 +2,24 @@
 if (documents.length > 0) 
 {
     app.preferences.rulerUnits = Units.PIXELS;
-	var numberOfColums = Number(prompt("Choose number of resultant Columns","2","Layers to Sprite Sheet"));
 
-    if (numberOfColums > 0) 
-    {
+    var dialog = new Window("dialog", "Layers to Sprite Sheet");
+    dialog.add("statictext", undefined, "Choose number of resultant Columns (min. 1, max. the number of selected layers)");
+
+    var sliderGroup = dialog.add("group");
+    var sliderText = sliderGroup.add("statictext", undefined, "1");
+    var slider = sliderGroup.add("slider", undefined, 1, 1, activeDocument.artLayers.length);
+    slider.onChanging = function() {
+    sliderText.text = Math.round(slider.value).toString();
+    };
+
+    var buttonGroup = dialog.add("group");
+    buttonGroup.alignment = "right";
+    buttonGroup.add("button", undefined, "OK", { name: "ok" });
+    buttonGroup.add("button", undefined, "Cancel", { name: "cancel" });
+
+    if (dialog.show() == 1) {
+        var numberOfColums = Math.round(slider.value);
         var xWidthPerSprite = activeDocument.width;
         var YWidthPerSprite = activeDocument.height;	
         
